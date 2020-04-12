@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hotel.mapper.RoleMapper">
+
+    <select id="findByUserId" resultType="com.example.hotel.entity.Role">
+      SELECT
+          t.id,
+          t.role,
+          t.description,
+          t.level,
+          t.is_register_default,
+          t.create_time
+      FROM
+          role t,
+          user_role_ref r
+      WHERE
+          r.user_id = #{value} AND
+          t.id = r.role_id
+          AND t.del_flag = 0
+          AND r.del_flag = 0
+          ORDER BY t.level DESC
+          LIMIT 1
+  </select>
+
+    <delete id="deleteByUserId">
+      DELETE
+      FROM
+          user_role_ref
+      WHERE
+          user_id = #{value}
+          AND del_flag = 0
+  </delete>
+
+    <select id="countUserByRoleId" resultType="java.lang.Integer">
+      SELECT
+          count( * )
+      FROM
+          user_role_ref r,
+          user t
+      WHERE
+          r.role_id = #{value} AND
+          r.user_id = t.id
+          AND t.del_flag = 0
+          AND r.del_flag = 0
+  </select>
+
+    <select id="findAllWithCount" resultType="com.example.hotel.entity.Role">
+        SELECT
+            t.id,
+            t.role,
+            t.description,
+            t.is_register_default,
+            t.level,
+            count( * ) AS count
+        FROM
+            user_role_ref r,
+            role t
+        WHERE
+            t.id = r.role_id
+            AND t.del_flag = 0
+            AND r.del_flag = 0
+        GROUP BY
+            r.role_id
+            order by t.level ASC
+    </select>
+
+    <select id="findByLessThanLevel" resultType="com.example.hotel.entity.Role">
+          SELECT
+              t.id,
+              t.role,
+              t.description,
+              t.is_register_default,
+              t.level
+          FROM
+              role t
+          WHERE
+              t.level &lt;= #{level} AND t.del_flag = 0
+              ORDER BY t.level DESC
+    </select>
+
+    <select id="findMaxLevelByUserId" resultType="java.lang.Integer">
+        SELECT
+            MAX(t.level)
+        FROM
+            user_role_ref r,
+            role t
+        WHERE
+            r.user_id = #{userId}
+            AND r.role_id = t.id
+    </select>
+
+    <select id="findDefaultRole" resultType="com.example.hotel.entity.Role">
+        SELECT
+          t.id,
+          t.role,
+          t.description,
+          t.level,
+          t.is_register_default,
+          t.create_time
+        FROM
+          role t
+        WHERE
+           t.is_register_default = 1
+        ORDER BY t.level ASC
+        LIMIT 1
+    </select>
+
+    <select id="getMaxRoleByUserId" resultType="com.example.hotel.entity.Role">
+
+    </select>
+
+
+</mapper>

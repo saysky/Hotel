@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hotel.mapper.RecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.hotel.entity.Record">
+        <id column="id" property="id"></id>
+        <result column="post_id" property="postId"></result>
+        <result column="user_id" property="userId"></result>
+        <result column="record_date" property="recordDate"></result>
+    </resultMap>
+
+    <update id="delete">
+        UPDATE record SET del_flag = 1
+        WHERE
+        user_id = #{userId} AND post_id = #{postId} AND record_date IN
+        (
+            <foreach collection="list" item="item" separator=",">
+                #{item}
+            </foreach>
+        )
+    </update>
+
+    <select id="findByPostIdAndRecordDate" resultMap="BaseResultMap">
+        SELECT
+            post_id, user_id, record_date
+        FROM
+            record
+        WHERE
+            record_date IN (
+                <foreach collection="list" item="item" separator=",">
+                    #{item}
+                </foreach>
+            )
+            AND post_id = #{postId}
+            AND del_flag = 0
+    </select>
+
+    <select id="findByPostId" resultMap="BaseResultMap">
+        SELECT
+            post_id, user_id, record_date
+        FROM
+            record
+        WHERE
+            post_id = #{postId} AND del_flag = 0
+        ORDER BY
+	        STR_TO_DATE( record_date, '%Y-%m-%d' ) DESC
+    </select>
+
+
+</mapper>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hotel.mapper.UserMapper">
+
+    <sql id="normal">0</sql>
+    <sql id="ban">1</sql>
+    <sql id="deleted">2</sql>
+
+    <select id="findByRoleId" resultType="com.example.hotel.entity.User">
+      SELECT
+          t.id,
+          t.user_name,
+          t.user_display_name,
+          t.user_pass,
+          t.id_card,
+          t.user_avatar,
+          t.user_desc,
+          t.login_last,
+          t.status,
+          t.create_time
+      FROM
+          user_role_ref r,
+          user t
+      WHERE
+          r.role_id = #{roleId} AND
+          r.user_id = t.id
+          AND t.del_flag = 0
+          AND r.del_flag = 0
+      ORDER BY
+          t.id DESC
+  </select>
+
+    <select id="findByRoleIdAndCondition" resultType="com.example.hotel.entity.User">
+        SELECT
+        t.id,
+        t.user_name,
+        t.user_display_name,
+        t.user_pass,
+        t.id_card,
+        t.user_avatar,
+        t.user_desc,
+        t.login_last,
+        t.status,
+        t.create_time
+        FROM
+        user_role_ref r,
+        user t
+        WHERE
+        t.del_flag = 0 AND
+        r.del_flag = 0 AND
+        r.role_id = #{roleId} AND
+        r.user_id = t.id
+        <if test="user.status != null and user.status != ''">
+            AND t.status = #{user.status}
+        </if>
+        <if test="user.userName != null and user.userName != ''">
+            AND t.user_name LIKE CONCAT('%', #{user.userName}, '%')
+        </if>
+        <if test="user.userDisplayName != null and user.userDisplayName != ''">
+            AND t.user_display_name LIKE CONCAT('%', #{user.userDisplayName}, '%')
+        </if>
+        <if test="user.idCard != null and user.idCard != ''">
+            AND t.id_card LIKE CONCAT('%', #{user.idCard}, '%')
+        </if>
+        ORDER BY
+        t.id DESC
+    </select>
+
+
+    <select id="findByCondition" resultType="com.example.hotel.entity.User">
+        SELECT
+        t.id,
+        t.user_name,
+        t.user_display_name,
+        t.user_pass,
+        t.id_card,
+        t.user_avatar,
+        t.user_desc,
+        t.login_last,
+        t.status,
+        t.create_time
+        FROM
+        user t
+        WHERE
+        t.del_flag = 0
+        <if test="user.status != null and user.status != ''">
+            AND t.status = #{user.status}
+        </if>
+        <if test="user.userName != null and user.userName != ''">
+            AND t.user_name LIKE CONCAT('%', #{user.userName}, '%')
+        </if>
+        <if test="user.userDisplayName != null and user.userDisplayName != ''">
+            AND t.user_display_name LIKE CONCAT('%', #{user.userDisplayName}, '%')
+        </if>
+        <if test="user.idCard != null and user.idCard != ''">
+            AND t.id_card LIKE CONCAT('%', #{user.idCard}, '%')
+        </if>
+        ORDER BY
+        t.id DESC
+    </select>
+
+
+    <select id="getTodayCount" resultType="java.lang.Integer">
+        SELECT
+            count( * )
+        FROM
+            post
+        WHERE
+            to_days( create_time ) = to_days( now( ) )
+            AND del_flag = 0
+    </select>
+
+    <select id="getUserPostRanking" resultType="com.example.hotel.entity.User">
+        SELECT
+            count( * ) postCount,
+            u.id,
+            u.user_name,
+            u.user_avatar,
+            u.user_display_name,
+            u.login_last,
+            u.create_time
+        FROM
+            post p,
+            user u
+        WHERE
+            p.user_id = u.id
+            AND p.del_flag = 0
+            AND u.del_flag = 0
+        GROUP BY
+            p.user_id
+        ORDER BY
+            postCount DESC
+            LIMIT #{value}
+    </select>
+
+    <select id="getLatestUser" resultType="com.example.hotel.entity.User">
+        SELECT
+            id,
+            user_name,
+            user_avatar,
+            user_display_name,
+            create_time
+        FROM
+            user
+        WHERE
+            del_flag = 0
+        ORDER BY
+            create_time DESC
+            LIMIT #{value}
+    </select>
+
+    <select id="getHotUsers" resultType="com.example.hotel.entity.User">
+        SELECT
+            u.id,
+            u.user_name,
+            u.user_avatar,
+            u.user_display_name,
+            ( SELECT count( * ) FROM post p WHERE p.user_id = u.id ) postCount
+        FROM
+            USER u
+        ORDER BY
+            postCount DESC
+    </select>
+</mapper>

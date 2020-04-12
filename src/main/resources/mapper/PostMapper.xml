@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hotel.mapper.PostMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.hotel.entity.Post">
+        <id column="id" property="id"></id>
+        <result column="post_title" property="postTitle"></result>
+        <result column="post_summary" property="postSummary"></result>
+        <result column="post_thumbnail" property="postThumbnail"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="post_status" property="postStatus"></result>
+        <result column="price" property="price"></result>
+        <result column="number" property="number"></result>
+        <result column="img_url" property="imgUrl"></result>
+        <association property="category" javaType="com.example.hotel.entity.Category">
+            <id property="id" column="cate_id"/>
+            <result property="cateName" column="cate_name"/>
+            <result property="cateDesc" column="cate_desc"/>
+            <result property="cateSort" column="cate_sort"/>
+        </association>
+    </resultMap>
+
+    <select id="findPostByCondition" resultMap="BaseResultMap">
+        SELECT
+            p.id,
+            p.post_title,
+            p.post_summary,
+            p.post_thumbnail,
+            p.create_time,
+            p.post_status,
+            p.price,
+            p.number,
+            p.img_url,
+            c.id cate_id,
+            c.cate_name,
+            c.cate_sort
+        FROM
+            post p,
+            category c
+        <where>
+            p.post_status = 0 AND
+            p.cate_id = c.id AND
+            <if test="condition.cateId != null and condition.cateId != 0">
+                c.id = #{condition.cateId} AND
+            </if>
+            <if test="condition.dateList != null and condition.dateList.size() > 0">
+                 p.id NOT IN ( SELECT post_id FROM record WHERE record_date IN (
+                    <foreach collection="condition.dateList" separator="," item="item">
+                        #{item}
+                    </foreach>
+                 )
+                 AND del_flag = 0 ) AND
+            </if>
+            p.del_flag = 0 AND
+            c.del_flag = 0
+        </where>
+    </select>
+
+    <select id="countPostByCateId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM post
+        WHERE cate_id = #{value} AND del_flag = 0
+    </select>
+
+</mapper>

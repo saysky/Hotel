@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hotel.mapper.PermissionMapper">
+
+    <select id="findByRoleId" resultType="com.example.hotel.entity.Permission">
+      SELECT
+          DISTINCT t.id,
+          t.`name`,
+          t.pid,
+          t.resource_type,
+          t.url,
+          t.icon,
+          t.sort
+      FROM
+          permission t,
+          role_permission_ref r
+      WHERE
+          r.role_id = #{value} AND
+          t.id = r.permission_id
+          AND t.del_flag = 0
+          AND r.del_flag = 0
+      ORDER BY t.sort ASC
+  </select>
+
+    <select id="findPermissionByUserId" resultType="com.example.hotel.entity.Permission">
+        SELECT
+            DISTINCT p.id,
+            p.`name`,
+            p.pid,
+            p.resource_type,
+            p.url,
+            p.icon,
+            p.sort
+        FROM
+            user u,
+            role r,
+            user_role_ref ur,
+            permission p,
+            role_permission_ref rp
+        WHERE
+            u.id = #{userId}
+            AND ur.user_id = u.id
+            AND ur.role_id = r.id
+            AND rp.permission_id = p.id
+            AND rp.role_id = r.id
+            AND u.del_flag = 0
+            AND r.del_flag = 0
+            AND ur.del_flag = 0
+            AND p.del_flag = 0
+            AND rp.del_flag = 0
+        ORDER BY p.sort ASC
+    </select>
+
+
+    <select id="findPermissionByUserIdAndResourceType" resultType="com.example.hotel.entity.Permission">
+        SELECT
+            DISTINCT p.id,
+            p.`name`,
+            p.pid,
+            p.resource_type,
+            p.url,
+            p.icon,
+            p.sort
+        FROM
+            user u,
+            role r,
+            user_role_ref ur,
+            permission p,
+            role_permission_ref rp
+        WHERE
+            u.id = #{userId}
+            AND ur.user_id = u.id
+            AND ur.role_id = r.id
+            AND rp.permission_id = p.id
+            AND rp.role_id = r.id
+            AND p.resource_type = #{resourceType}
+            AND u.del_flag = 0
+            AND r.del_flag = 0
+            AND ur.del_flag = 0
+            AND p.del_flag = 0
+            AND rp.del_flag = 0
+        ORDER BY p.sort ASC
+    </select>
+
+    <select id="findPermissionByResourceType" resultType="com.example.hotel.entity.Permission">
+        SELECT
+            DISTINCT p.id,
+            p.`name`,
+            p.pid,
+            p.resource_type,
+            p.url,
+            p.icon,
+            p.sort
+        FROM
+            permission p
+        <where>
+
+            <if test="resourceType != null">
+                p.resource_type = #{resourceType} AND
+            </if>
+            p.del_flag = 0
+        </where>
+        ORDER BY p.sort ASC
+    </select>
+
+    <select id="findPermissionByRoleId" resultType="com.example.hotel.entity.Permission">
+        SELECT
+            p.id,
+            p.pid,
+            p.name,
+            p.sort,
+            p.resource_type
+        FROM
+            permission p,
+            role_permission_ref r
+        WHERE
+            p.id = r.permission_id
+            AND p.del_flag = 0
+            AND r.del_flag = 0
+            AND r.role_id = #{roleId}
+    </select>
+
+    <select id="countChildPermission" resultType="java.lang.Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            permission
+        WHERE
+            pid = #{id}
+            AND del_flag = 0
+    </select>
+
+    <select id="findByUrl" resultType="com.example.hotel.entity.Permission">
+        SELECT
+            id, name, pid, resource_type, url
+        FROM
+            permission
+        WHERE
+            url = #{url} AND del_flag = 0
+        LIMIT 1
+    </select>
+</mapper>
