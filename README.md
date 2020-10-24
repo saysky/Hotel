@@ -4,7 +4,8 @@
 - 酒店工作人员功能：客户管理、客房浏览查询、预定客房、查看所有订单列表、财务管理
 - 客户功能：注册、登录、找回密码、客房浏览查询、预定客房、查看自己订单列表
 
-详细介绍：[https://liuyanzhao.com/10308.html](https://liuyanzhao.com/10308.html)
+详细介绍：[https://liuyanzhao.com/10308.html](https://liuyanzhao.com/10308.html) <br/>
+预览地址：[https://hotel.liuyanzhao.com](https://hotel.liuyanzhao.com)
 
 ## 技术组成
 - SpringBoot
