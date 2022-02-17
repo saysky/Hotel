@@ -8,6 +8,11 @@
 预览地址：[http://hotel.liuyanzhao.com](http://hotel.liuyanzhao.com) <br/>
 已录制2小时的代码讲解视频
 
+- 最新消息 2022 最新租房系统地址：[2022 基于SpringBoot的房屋租赁平台 房屋展示平台 留学生房屋租赁平台](https://github.com/saysky/HouseKey)
+- SSM租房系统[https://github.com/saysky/verio](https://github.com/saysky/verio)
+- SpringBoot租房系统[https://github.com/saysky/verio-boot](https://github.com/saysky/verio-boot)
+- SpringBoot租房系统[https://github.com/saysky/manland](https://github.com/saysky/manland)
+
 ## 技术组成
 - SpringBoot
 - MyBatis
