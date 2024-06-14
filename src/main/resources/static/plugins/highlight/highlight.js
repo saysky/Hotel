@@ -223,4 +223,3 @@ dp.sh.Toolbar.Command = function(name, sender)
 	//	n = n.parentNode;
 	//if(n != null)
 		dp.sh.Toolbar.Commands[name].func(sender, highlightdiv);
-}

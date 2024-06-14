@@ -118,4 +118,3 @@ $('#btn-logout').click(function () {
             window.location.reload();
         }
     });
-});

@@ -154,4 +154,3 @@
 });
 chart.render();
 
-})(this.jQuery);

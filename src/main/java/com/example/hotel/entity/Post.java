@@ -74,4 +74,3 @@ public class Post extends BaseEntity {
     @TableField(exist = false)
     private Category category;
 
-}

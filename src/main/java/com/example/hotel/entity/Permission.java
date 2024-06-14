@@ -59,4 +59,3 @@ public class Permission  extends BaseEntity {
     @TableField(exist = false)
     private List<Permission> childPermissions;
 
-}

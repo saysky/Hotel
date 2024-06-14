@@ -46,4 +46,3 @@ public class Role  extends BaseEntity {
     @TableField(exist = false)
     private List<Permission> permissions;
 
-}

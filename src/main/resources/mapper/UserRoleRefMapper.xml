@@ -12,4 +12,3 @@
         WHERE user_id = #{value}
             AND del_flag = 0
   </delete>
-</mapper>

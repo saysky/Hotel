@@ -139,4 +139,3 @@
             url = #{url} AND del_flag = 0
         LIMIT 1
     </select>
-</mapper>
