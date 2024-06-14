@@ -38,4 +38,3 @@ nbdist/
 ### 屏蔽，需要完整代码联系博主：微信847064370
 *.html
 /templates
-webapp/
